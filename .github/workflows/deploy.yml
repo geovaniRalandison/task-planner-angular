@@ -38,13 +38,16 @@ jobs:
       - name: Build Angular app
         run: npm run build:gh
 
+      - name: List build output
+        run: find docs -type f | head -20
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: docs/browser
 
       - name: Deploy to GitHub Pages
         id: deployment
