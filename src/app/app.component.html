@@ -1,0 +1,116 @@
+<div class="app-container">
+  <header>
+    <h1><i class="fas fa-tasks"></i> Planificateur de tâches</h1>
+    <p class="subtitle">Gestion personnelle et familiale</p>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">{{ tasks.length }}</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-card perso">
+      <div class="stat-value">{{ categoryCounts.perso }}</div>
+      <div class="stat-label">Perso</div>
+    </div>
+    <div class="stat-card famille">
+      <div class="stat-value">{{ categoryCounts.famille }}</div>
+      <div class="stat-label">Famille</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label>Catégorie:</label>
+      <select [(ngModel)]="filterCategory">
+        <option value="toutes">Toutes</option>
+        <option value="perso">Personnel</option>
+        <option value="famille">Famille</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Priorité:</label>
+      <select [(ngModel)]="filterPriority">
+        <option value="toutes">Toutes</option>
+        <option value="haute">Haute</option>
+        <option value="moyenne">Moyenne</option>
+        <option value="basse">Basse</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="add-task-form">
+    <h2><i class="fas fa-plus-circle"></i> Ajouter une tâche</h2>
+    <form (ngSubmit)="addTask()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Titre *</label>
+          <input type="text" [(ngModel)]="newTask.title" name="title" placeholder="Ex: Faire les courses" required>
+        </div>
+        <div class="form-group">
+          <label>Date limite</label>
+          <input type="date" [(ngModel)]="newTask.dueDate" name="dueDate">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="newTask.description" name="description" placeholder="Détails..."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select [(ngModel)]="newTask.category" name="category">
+            <option value="perso">Personnel</option>
+            <option value="famille">Famille</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Priorité</label>
+          <select [(ngModel)]="newTask.priority" name="priority">
+            <option value="haute">Haute</option>
+            <option value="moyenne">Moyenne</option>
+            <option value="basse">Basse</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn-add" [disabled]="!newTask.title">
+        <i class="fas fa-plus"></i> Ajouter
+      </button>
+    </form>
+  </div>
+
+  <div class="tasks-container">
+    <h2><i class="fas fa-list-check"></i> Mes tâches ({{ filteredTasks.length }})</h2>
+    
+    <div *ngIf="filteredTasks.length === 0" class="empty-state">
+      <i class="fas fa-clipboard-list"></i>
+      <p>Aucune tâche à afficher</p>
+    </div>
+
+    <div class="tasks-grid">
+      <div *ngFor="let task of filteredTasks" class="task-card" [class.completed]="task.completed" [class.priority-high]="task.priority === 'haute'" [class.priority-low]="task.priority === 'basse'">
+        <div class="task-header">
+          <input type="checkbox" [checked]="task.completed" (change)="toggleComplete(task.id)">
+          <h3>{{ task.title }}</h3>
+          <span class="category-badge" [class.perso]="task.category === 'perso'" [class.famille]="task.category === 'famille'">
+            {{ task.category === 'perso' ? '👤' : '👨‍👩‍👧‍👦' }}
+          </span>
+        </div>
+        <div class="task-body">
+          <p *ngIf="task.description">{{ task.description }}</p>
+          <div class="task-meta">
+            <span class="due-date"><i class="fas fa-calendar-alt"></i> {{ task.dueDate | date:'dd/MM/yyyy' }}</span>
+            <span class="priority-label" [class.high]="task.priority === 'haute'" [class.medium]="task.priority === 'moyenne'" [class.low]="task.priority === 'basse'">
+              {{ task.priority }}
+            </span>
+          </div>
+        </div>
+        <button class="btn-delete" (click)="deleteTask(task.id)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
