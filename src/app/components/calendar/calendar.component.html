@@ -11,7 +11,7 @@
     </div>
   </div>
   <full-calendar [options]="calendarOptions"></full-calendar>
-  <div *ngIf="tasks.filter(t => t.dueDate && t.dueDate.trim()).length === 0" class="empty-calendar">
+  <div *ngIf="tasksWithDueDate.length === 0" class="empty-calendar">
     <i class="fas fa-calendar-alt"></i>
     <p>Aucune tâche avec date limite à afficher</p>
   </div>

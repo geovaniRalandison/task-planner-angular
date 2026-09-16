@@ -128,6 +128,10 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  get tasksWithDueDate() {
+    return this.tasks.filter(task => task.dueDate && task.dueDate.trim());
+  }
+
   getFamilyName(familyId: number | undefined): string {
     if (familyId === undefined) return '';
     const family = this.families.find(f => f.id === familyId);
