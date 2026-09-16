@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface AddTaskDialogResult {
   title: string;
@@ -15,17 +15,17 @@ export interface AddTaskDialogResult {
 @Component({
   selector: 'app-add-task-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatDialogModule],
   template: `
-    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-      <div class="dialog-head">
-        <h2 id="dialog-title"><i class="fas fa-plus-circle"></i> Ajouter une tâche</h2>
-        <button class="dialog-close" (click)="cancel()" aria-label="Fermer">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
+    <h2 mat-dialog-title class="dialog-head">
+      <span><i class="fas fa-plus-circle"></i> Ajouter une tâche</span>
+      <button class="dialog-close" mat-dialog-close aria-label="Fermer">
+        <i class="fas fa-times"></i>
+      </button>
+    </h2>
 
-      <form (ngSubmit)="submit()">
+    <div mat-dialog-content>
+      <form id="taskForm" (ngSubmit)="submit()">
         <div class="form-row">
           <div class="form-group">
             <label>Titre *</label>
@@ -73,39 +73,30 @@ export interface AddTaskDialogResult {
           Vous n'êtes membre d'aucune famille.
         </p>
         <div *ngIf="error" class="form-error">{{ error }}</div>
-
-        <div class="dialog-actions">
-          <button type="button" class="btn-cancel" (click)="cancel()">Annuler</button>
-          <button type="submit" class="btn-add" [disabled]="!title">
-            <i class="fas fa-plus"></i> Ajouter
-          </button>
-        </div>
       </form>
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button type="button" class="btn-cancel" mat-dialog-close>Annuler</button>
+      <button type="submit" class="btn-add" form="taskForm" [disabled]="!title">
+        <i class="fas fa-plus"></i> Ajouter
+      </button>
     </div>
   `,
   styles: [`
-    .dialog-panel {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      width: min(560px, calc(100vw - 40px));
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
     .dialog-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
     }
-    .dialog-head h2 {
+    .dialog-head span {
       color: #2c3e50;
-      font-size: 1.4em;
+      font-size: 1.3em;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .dialog-head h2 i { color: #667eea; }
+    .dialog-head span i { color: #667eea; }
     .dialog-close {
       background: #f8f9fa;
       border: none;
@@ -133,6 +124,7 @@ export interface AddTaskDialogResult {
       border: 2px solid #e0e0e0;
       border-radius: 8px;
       font-size: 1em;
+      font-family: inherit;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
@@ -150,7 +142,6 @@ export interface AddTaskDialogResult {
       margin-bottom: 15px;
       font-size: 0.9em;
     }
-    .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
     .btn-cancel {
       background: #f8f9fa;
       border: 2px solid #e0e0e0;
@@ -171,7 +162,7 @@ export interface AddTaskDialogResult {
       font-size: 1em;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
     }
@@ -189,8 +180,8 @@ export class AddTaskDialogComponent {
   error = '';
 
   constructor(
-    public dialogRef: DialogRef<AddTaskDialogResult>,
-    @Inject(DIALOG_DATA) public families: { id: number; name: string }[]
+    public dialogRef: MatDialogRef<AddTaskDialogComponent, AddTaskDialogResult>,
+    @Inject(MAT_DIALOG_DATA) public families: { id: number; name: string }[]
   ) {
     this.dueDate = this.formatDate(new Date());
   }

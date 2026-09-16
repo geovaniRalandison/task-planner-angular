@@ -9,14 +9,14 @@ body {
 
 .container { max-width: 1000px; margin: 0 auto; }
 
-/* Angular CDK Dialog */
-.cdk-dialog-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Angular Material Dialog */
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 15px;
+  --mdc-dialog-container-color: #ffffff;
+  --mdc-dialog-subhead-color: #2c3e50;
 }
 
-/* Backdrop natif du CDK */
+/* Backdrop Material/CDK */
 .cdk-overlay-backdrop {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);

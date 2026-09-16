@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Dialog } from '@angular/cdk/dialog';
-import { Overlay } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService, SessionUser } from '../../services/auth.service';
 import { FamilyService, Family } from '../../services/family.service';
 import { DbService } from '../../services/db.service';
@@ -41,8 +40,7 @@ export class TaskPlannerComponent implements OnInit {
     private familyService: FamilyService,
     private db: DbService,
     private router: Router,
-    private dialog: Dialog,
-    private overlay: Overlay
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
@@ -85,16 +83,17 @@ export class TaskPlannerComponent implements OnInit {
   }
 
   openAddTaskDialog() {
-    const dialogRef = this.dialog.open<AddTaskDialogResult>(AddTaskDialogComponent, {
-      width: 'min(560px, calc(100vw - 40px))',
-      autoFocus: 'first-tabbable',
-      positionStrategy: this.overlay.position()
-        .global()
-        .centerHorizontally()
-        .centerVertically(),
-      data: this.families
-    });
-    dialogRef.closed.subscribe(result => {
+    const dialogRef = this.dialog.open<AddTaskDialogComponent, { id: number; name: string }[], AddTaskDialogResult>(
+      AddTaskDialogComponent,
+      {
+        width: 'min(560px, calc(100vw - 40px))',
+        maxWidth: 'calc(100vw - 40px)',
+        autoFocus: 'first-tabbable',
+        hasBackdrop: true,
+        data: this.families
+      }
+    );
+    dialogRef.afterClosed().subscribe(result => {
       if (result && this.currentUser) {
         this.addTask(result);
       }
