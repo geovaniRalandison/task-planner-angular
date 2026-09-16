@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { AuthService, SessionUser } from '../../services/auth.service';
@@ -27,6 +28,8 @@ interface Task {
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
+  @ViewChild(FullCalendarComponent) calendarComponent!: FullCalendarComponent;
+  
   currentUser: SessionUser | null = null;
   families: Family[] = [];
   tasks: Task[] = [];
@@ -90,18 +93,31 @@ export class CalendarComponent implements OnInit {
   }
 
   updateCalendarEvents() {
-    const events: EventInput[] = this.tasks.map(task => ({
-      id: task.id.toString(),
-      title: task.title,
-      date: task.dueDate,
-      display: 'block',
-      backgroundColor: this.getEventColor(task),
-      borderColor: this.getEventColor(task)
-    }));
+    const events: EventInput[] = this.tasks
+      .filter(task => task.dueDate && task.dueDate.trim())
+      .map(task => ({
+        id: task.id.toString(),
+        title: task.title,
+        date: task.dueDate,
+        display: 'block',
+        backgroundColor: this.getEventColor(task),
+        borderColor: this.getEventColor(task)
+      }));
+    
     this.calendarOptions = {
       ...this.calendarOptions,
       events: events
     };
+    
+    // Force refresh if calendar is already initialized
+    if (this.calendarComponent) {
+      setTimeout(() => {
+        const api = this.calendarComponent.getApi();
+        if (api) {
+          api.refetchEvents();
+        }
+      }, 0);
+    }
   }
 
   getEventColor(task: Task): string {

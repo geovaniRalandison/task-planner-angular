@@ -10,9 +10,9 @@
       <span class="legend-item"><span class="legend-color completed"></span> Terminé</span>
     </div>
   </div>
-  <full-calendar [options]="calendarOptions"></full-calendar>
-  <div *ngIf="tasks.length === 0" class="empty-calendar">
+  <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  <div *ngIf="tasks.filter(t => t.dueDate && t.dueDate.trim()).length === 0" class="empty-calendar">
     <i class="fas fa-calendar-alt"></i>
-    <p>Aucune tâche à afficher dans le calendrier</p>
+    <p>Aucune tâche avec date limite à afficher dans le calendrier</p>
   </div>
 </div>
