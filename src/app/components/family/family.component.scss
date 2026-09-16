@@ -1,0 +1,515 @@
+.app-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  margin: 0 auto;
+  max-width: 900px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 1.8em;
+      margin-bottom: 5px;
+
+      i { margin-right: 10px; color: #667eea; }
+    }
+
+    .subtitle { color: #7f8c8d; font-size: 1em; }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-back {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 0.95em;
+
+    &:hover { background: #bbdefb; transform: translateY(-2px); }
+  }
+
+  .btn-logout {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95em;
+
+    &:hover { background: #ffcdd2; transform: translateY(-2px); }
+  }
+}
+
+.my-id-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+  border: 2px dashed #90caf9;
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+
+  .id-icon {
+    font-size: 2em;
+    color: #1976d2;
+  }
+
+  .id-text {
+    flex: 1;
+    min-width: 150px;
+
+    .id-label {
+      color: #7f8c8d;
+      font-size: 0.85em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .id-value {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #1565c0;
+      font-family: monospace;
+      word-break: break-all;
+    }
+  }
+
+  .btn-copy {
+    background: #1976d2;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95em;
+
+    &:hover { background: #1565c0; transform: translateY(-2px); }
+  }
+
+  .id-hint {
+    width: 100%;
+    color: #7f8c8d;
+    font-size: 0.85em;
+    margin-top: 5px;
+  }
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.invitations-section {
+  margin-bottom: 30px;
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+
+    i { margin-right: 8px; color: #e65100; }
+  }
+
+  .invitation-card {
+    background: #fff8e1;
+    border: 2px solid #ffca28;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+
+    .invitation-info p { color: #2c3e50; }
+
+    .invitation-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-accept {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover { background: #219653; transform: translateY(-2px); }
+    }
+
+    .btn-decline {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover { background: #c0392b; transform: translateY(-2px); }
+    }
+  }
+}
+
+.create-family-form {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+
+    i { margin-right: 8px; color: #667eea; }
+  }
+
+  .create-form {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+
+    input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+
+      &:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+    }
+  }
+
+  .btn-add {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}
+
+.families-container {
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i { color: #667eea; }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+
+  i { font-size: 3em; margin-bottom: 15px; display: block; opacity: 0.5; }
+  p { font-size: 1.1em; }
+}
+
+.family-card {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 20px;
+
+  .family-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+
+    h3 {
+      color: #2c3e50;
+      font-size: 1.2em;
+
+      i { margin-right: 8px; color: #667eea; }
+    }
+
+    .owner-badge {
+      background: #fff3e0;
+      color: #e65100;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  .members-list {
+    margin-bottom: 15px;
+
+    .members-title {
+      color: #7f8c8d;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .members-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8f9fa;
+      padding: 8px 14px;
+      border-radius: 20px;
+
+      .member-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8em;
+        font-weight: bold;
+      }
+
+      .member-name { color: #2c3e50; font-size: 0.9em; }
+      .member-crown { color: #e65100; font-size: 0.85em; }
+    }
+  }
+
+  .pending-count {
+    background: #fff8e1;
+    color: #e65100;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .invite-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+
+    .invite-title {
+      color: #2c3e50;
+      font-size: 0.92em;
+      font-weight: 500;
+      margin-bottom: 10px;
+
+      i { margin-right: 8px; color: #667eea; }
+    }
+
+    .invite-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      input {
+        flex: 1;
+        min-width: 200px;
+        padding: 11px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95em;
+        font-family: monospace;
+        transition: border-color 0.3s;
+
+        &:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+      }
+    }
+
+    .btn-invite {
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95em;
+
+      &:hover { background: #1565c0; transform: translateY(-2px); }
+    }
+  }
+
+  .family-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .btn-leave {
+    background: #fff3e0;
+    color: #e65100;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92em;
+
+    &:hover { background: #ffe0b2; }
+  }
+
+  .btn-delete-family {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92em;
+
+    &:hover { background: #ffcdd2; }
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container { padding: 20px; }
+
+  header { flex-direction: column; align-items: flex-start; }
+
+  .my-id-card { flex-direction: column; text-align: center; }
+
+  .invitation-card { flex-direction: column; align-items: stretch; }
+
+  .invitation-actions {
+    justify-content: stretch;
+
+    button { flex: 1; justify-content: center; }
+  }
+
+  .create-form { flex-direction: column; }
+  .invite-form { flex-direction: column; }
+  .family-actions { justify-content: stretch; }
+
+  .family-actions button { flex: 1; justify-content: center; }
+}
