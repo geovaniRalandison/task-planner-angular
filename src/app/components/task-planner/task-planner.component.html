@@ -8,6 +8,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <button class="btn-add" (click)="openAddTaskDialog()">
+        <i class="fas fa-plus"></i> Nouvelle tâche
+      </button>
       <button class="btn-family" routerLink="/calendar">
         <i class="fas fa-calendar-week"></i> Calendrier
       </button>
@@ -59,59 +62,6 @@
         <option value="basse">Basse</option>
       </select>
     </div>
-  </div>
-
-  <div class="add-task-form">
-    <h2><i class="fas fa-plus-circle"></i> Ajouter une tâche</h2>
-    <form (ngSubmit)="addTask()">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Titre *</label>
-          <input type="text" [(ngModel)]="newTask.title" name="title" placeholder="Ex: Faire les courses" required>
-        </div>
-        <div class="form-group">
-          <label>Date limite</label>
-          <input type="date" [(ngModel)]="newTask.dueDate" name="dueDate">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Description</label>
-          <textarea [(ngModel)]="newTask.description" name="description" placeholder="Détails..."></textarea>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Catégorie</label>
-          <select [(ngModel)]="newTask.category" name="category">
-            <option value="perso">Personnel</option>
-            <option value="famille">Famille (partagée)</option>
-          </select>
-        </div>
-        <div class="form-group" *ngIf="newTask.category === 'famille'">
-          <label>Famille *</label>
-          <select [(ngModel)]="selectedFamilyId" name="family" [disabled]="families.length === 0">
-            <option [ngValue]="null" disabled>Choisir une famille</option>
-            <option *ngFor="let f of families" [ngValue]="f.id">{{ f.name }}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Priorité</label>
-          <select [(ngModel)]="newTask.priority" name="priority">
-            <option value="haute">Haute</option>
-            <option value="moyenne">Moyenne</option>
-            <option value="basse">Basse</option>
-          </select>
-        </div>
-      </div>
-      <p class="no-family-hint" *ngIf="newTask.category === 'famille' && families.length === 0">
-        Vous n'êtes membre d'aucune famille. <a routerLink="/family">Créer ou rejoindre une famille</a>
-      </p>
-      <div *ngIf="formError" class="form-error">{{ formError }}</div>
-      <button type="submit" class="btn-add" [disabled]="!newTask.title">
-        <i class="fas fa-plus"></i> Ajouter
-      </button>
-    </form>
   </div>
 
   <div class="tasks-container">

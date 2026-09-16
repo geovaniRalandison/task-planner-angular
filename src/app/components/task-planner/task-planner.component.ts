@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Dialog } from '@angular/cdk/dialog';
 import { AuthService, SessionUser } from '../../services/auth.service';
 import { FamilyService, Family } from '../../services/family.service';
 import { DbService } from '../../services/db.service';
 import { CalendarComponent } from '../calendar/calendar.component';
+import { AddTaskDialogComponent, AddTaskDialogResult } from './add-task-dialog.component';
 
 interface Task {
   id: number;
@@ -30,15 +32,6 @@ export class TaskPlannerComponent implements OnInit {
   currentUser: SessionUser | null = null;
   families: Family[] = [];
   tasks: Task[] = [];
-  newTask: Partial<Task> = {
-    title: '',
-    description: '',
-    category: 'perso',
-    dueDate: this.formatDate(new Date()),
-    priority: 'moyenne'
-  };
-  selectedFamilyId: number | null = null;
-  formError = '';
   filterCategory: 'toutes' | 'perso' | 'famille' = 'toutes';
   filterPriority: 'toutes' | 'haute' | 'moyenne' | 'basse' = 'toutes';
 
@@ -46,7 +39,8 @@ export class TaskPlannerComponent implements OnInit {
     private authService: AuthService,
     private familyService: FamilyService,
     private db: DbService,
-    private router: Router
+    private router: Router,
+    private dialog: Dialog
   ) {}
 
   async ngOnInit() {
@@ -88,44 +82,33 @@ export class TaskPlannerComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  formatDate(date: Date): string {
-    const d = new Date(date);
-    return d.toISOString().split('T')[0];
+  openAddTaskDialog() {
+    const dialogRef = this.dialog.open<AddTaskDialogResult>(AddTaskDialogComponent, {
+      width: 'min(560px, calc(100vw - 40px))',
+      autoFocus: 'first-tabbable',
+      data: this.families
+    });
+    dialogRef.closed.subscribe(result => {
+      if (result && this.currentUser) {
+        this.addTask(result);
+      }
+    });
   }
 
-  async addTask() {
-    this.formError = '';
-    if (!this.newTask.title || !this.currentUser) {
-      return;
-    }
-    if (this.newTask.category === 'famille' && !this.selectedFamilyId) {
-      this.formError = 'Sélectionnez une famille pour cette tâche (ou créez-en une).';
-      return;
-    }
+  private async addTask(result: AddTaskDialogResult) {
     const task: Task = {
       id: Date.now(),
-      title: this.newTask.title!,
-      description: this.newTask.description || '',
-      category: this.newTask.category!,
-      dueDate: this.newTask.dueDate!,
+      title: result.title,
+      description: result.description || '',
+      category: result.category,
+      dueDate: result.dueDate,
       completed: false,
-      priority: this.newTask.priority!,
-      familyId: this.newTask.category === 'famille' ? this.selectedFamilyId! : undefined,
-      createdBy: this.newTask.category === 'famille' ? this.currentUser.name : undefined
+      priority: result.priority,
+      familyId: result.category === 'famille' ? result.familyId! : undefined,
+      createdBy: result.category === 'famille' ? this.currentUser!.name : undefined
     };
     this.tasks.push(task);
     await this.saveTasks();
-    this.resetForm();
-  }
-
-  resetForm() {
-    this.newTask = {
-      title: '',
-      description: '',
-      category: 'perso',
-      dueDate: this.formatDate(new Date()),
-      priority: 'moyenne'
-    };
   }
 
   async deleteTask(id: number) {
