@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { AuthService, SessionUser } from '../../services/auth.service';
@@ -27,11 +27,12 @@ interface Task {
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
-  @ViewChild(FullCalendarComponent) calendarComponent!: FullCalendarComponent;
+  @ViewChild('calendar') calendarComponent!: ElementRef;
   
   currentUser: SessionUser | null = null;
   families: Family[] = [];
   tasks: Task[] = [];
+  calendarApi: any;
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridWeek',
     plugins: [dayGridPlugin],
@@ -109,14 +110,13 @@ export class CalendarComponent implements OnInit {
     };
     
     // Force refresh if calendar is already initialized
-    if (this.calendarComponent) {
-      setTimeout(() => {
-        const api = this.calendarComponent.getApi();
-        if (api) {
-          api.refetchEvents();
-        }
-      }, 0);
+    if (this.calendarApi) {
+      this.calendarApi.refetchEvents();
     }
+  }
+
+  onCalendarInitialized(api: any) {
+    this.calendarApi = api;
   }
 
   getEventColor(task: Task): string {
