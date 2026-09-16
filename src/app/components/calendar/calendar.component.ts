@@ -53,12 +53,19 @@ export class CalendarComponent implements OnInit {
       if (task && task.category === 'famille') {
         const family = this.families.find(f => f.id === task.familyId);
         const familyName = family ? family.name : 'Famille';
-        const title = task.title + (task.createdBy ? ` (${task.createdBy})` : '');
+        let title = task.title;
+        if (task.createdBy) {
+          title = task.title + ' (' + task.createdBy + ')';
+        }
         const titleEl = arg.el.querySelector('.fc-event-title');
         if (titleEl) {
           titleEl.textContent = title;
         }
-        arg.el.setAttribute('title', `${familyName}: ${task.description || ''}`);
+        let tooltip = familyName;
+        if (task.description) {
+          tooltip = familyName + ': ' + task.description;
+        }
+        arg.el.setAttribute('title', tooltip);
       }
     }
   };
