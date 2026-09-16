@@ -1,0 +1,109 @@
+<div class="app-container">
+  <header>
+    <div class="user-info">
+      <span class="user-avatar">{{ currentUser?.name?.charAt(0)?.toUpperCase() || '?' }}</span>
+      <div>
+        <h1><i class="fas fa-users"></i> Familles</h1>
+        <p class="subtitle">Gérez vos familles et vos invitations</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-back" routerLink="/"><i class="fas fa-arrow-left"></i> Retour</button>
+      <button class="btn-logout" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="my-id-card">
+    <i class="fas fa-id-badge id-icon"></i>
+    <div class="id-text">
+      <div class="id-label">Mon identifiant</div>
+      <div class="id-value">{{ currentUser?.id }}</div>
+    </div>
+    <button class="btn-copy" (click)="copyId()"><i class="fas fa-copy"></i> Copier</button>
+    <p class="id-hint">Partagez cet identifiant pour que l'on puisse vous inviter dans une famille</p>
+  </div>
+
+  <div *ngIf="successMessage" class="success-message"><i class="fas fa-check-circle"></i> {{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message"><i class="fas fa-exclamation-circle"></i> {{ errorMessage }}</div>
+
+  <div *ngIf="pendingInvitations.length > 0" class="invitations-section">
+    <h2><i class="fas fa-envelope"></i> Invitations en attente ({{ pendingInvitations.length }})</h2>
+    <div *ngFor="let inv of pendingInvitations" class="invitation-card">
+      <div class="invitation-info">
+        <p><strong>{{ inv.fromUserName }}</strong> vous invite à rejoindre la famille <strong>« {{ inv.familyName }} »</strong></p>
+      </div>
+      <div class="invitation-actions">
+        <button class="btn-accept" (click)="respond(inv, true)"><i class="fas fa-check"></i> Accepter</button>
+        <button class="btn-decline" (click)="respond(inv, false)"><i class="fas fa-times"></i> Refuser</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="create-family-form">
+    <h2><i class="fas fa-plus-circle"></i> Créer une famille</h2>
+    <form (ngSubmit)="createFamily()" class="create-form">
+      <input
+        type="text"
+        [(ngModel)]="newFamilyName"
+        name="familyName"
+        placeholder="Nom de la famille (ex: Famille Dupont)"
+        required>
+      <button type="submit" class="btn-add" [disabled]="!newFamilyName">
+        <i class="fas fa-plus"></i> Créer
+      </button>
+    </form>
+  </div>
+
+  <div class="families-container">
+    <h2><i class="fas fa-house-user"></i> Mes familles ({{ families.length }})</h2>
+
+    <div *ngIf="families.length === 0" class="empty-state">
+      <i class="fas fa-users-slash"></i>
+      <p>Vous n'êtes membre d'aucune famille</p>
+    </div>
+
+    <div *ngFor="let family of families" class="family-card">
+      <div class="family-header">
+        <h3><i class="fas fa-user-group"></i> {{ family.name }}</h3>
+        <span *ngIf="isOwner(family)" class="owner-badge"><i class="fas fa-crown"></i> Propriétaire</span>
+      </div>
+
+      <div class="members-list">
+        <div class="members-title">Membres ({{ getMembers(family).length }})</div>
+        <div class="members-grid">
+          <div *ngFor="let m of getMembers(family)" class="member-item">
+            <span class="member-avatar">{{ m.name.charAt(0).toUpperCase() }}</span>
+            <span class="member-name">{{ m.name }}</span>
+            <i *ngIf="m.isOwner" class="fas fa-crown member-crown"></i>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="getPendingCountForFamily(family) > 0" class="pending-count">
+        <i class="fas fa-hourglass-half"></i> {{ getPendingCountForFamily(family) }} invitation(s) en attente de confirmation
+      </div>
+
+      <div class="invite-section">
+        <div class="invite-title"><i class="fas fa-user-plus"></i> Inviter un membre par identifiant</div>
+        <form (ngSubmit)="inviteMember(family)" class="invite-form">
+          <input
+            type="text"
+            [(ngModel)]="inviteInputs[family.id]"
+            [name]="'invite_' + family.id"
+            placeholder="Identifiant de l'utilisateur"
+            required>
+          <button type="submit" class="btn-invite"><i class="fas fa-paper-plane"></i> Inviter</button>
+        </form>
+      </div>
+
+      <div class="family-actions">
+        <button *ngIf="!isOwner(family)" class="btn-leave" (click)="leaveFamily(family)">
+          <i class="fas fa-door-open"></i> Quitter la famille
+        </button>
+        <button *ngIf="isOwner(family)" class="btn-delete-family" (click)="deleteFamily(family)">
+          <i class="fas fa-trash"></i> Supprimer la famille
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

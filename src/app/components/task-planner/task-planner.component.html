@@ -7,9 +7,14 @@
         <p class="subtitle">Bonjour {{ currentUser?.name }} !</p>
       </div>
     </div>
-    <button class="btn-logout" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i> Déconnexion
-    </button>
+    <div class="header-actions">
+      <button class="btn-family" routerLink="/family">
+        <i class="fas fa-users"></i> Familles
+      </button>
+      <button class="btn-logout" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+      </button>
+    </div>
   </header>
 
   <div class="stats-bar">
