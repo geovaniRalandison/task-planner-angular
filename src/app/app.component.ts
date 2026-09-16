@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
-  template: '<router-outlet></router-outlet>'
+  template: '<router-outlet></router-outlet><footer class="app-version">v1.1.0 · IndexedDB</footer>',
+  styles: ['.app-version { text-align: center; color: #95a5a6; font-size: 0.8em; padding: 15px 0; }']
 })
 export class AppComponent {}
