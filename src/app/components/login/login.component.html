@@ -1,0 +1,43 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1><i class="fas fa-sign-in-alt"></i> Connexion</h1>
+    <p class="subtitle">Accédez à votre planificateur</p>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          [(ngModel)]="email" 
+          placeholder="votre@email.com" 
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          [(ngModel)]="password" 
+          placeholder="••••••••" 
+          required>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="!email || !password">
+        <i class="fas fa-sign-in-alt"></i> Se connecter
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Pas encore de compte ? 
+      <a routerLink="/register">Créer un compte</a>
+    </p>
+  </div>
+</div>
