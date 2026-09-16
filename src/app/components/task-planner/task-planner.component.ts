@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService, SessionUser } from '../../services/auth.service';
 import { FamilyService, Family } from '../../services/family.service';
 import { DbService } from '../../services/db.service';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 interface Task {
   id: number;
@@ -21,7 +22,7 @@ interface Task {
 @Component({
   selector: 'app-task-planner',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, CalendarComponent],
   templateUrl: './task-planner.component.html',
   styleUrls: ['./task-planner.component.scss']
 })
