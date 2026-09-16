@@ -102,4 +102,13 @@ export class AuthService {
   getCurrentUser(): SessionUser | null {
     return this.getUserFromStorage();
   }
+
+  userExists(id: number): boolean {
+    return this.getUsers().some(u => u.id === id);
+  }
+
+  getUserNameById(id: number): string | null {
+    const user = this.getUsers().find(u => u.id === id);
+    return user ? user.name : null;
+  }
 }
