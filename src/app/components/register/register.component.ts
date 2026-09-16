@@ -23,7 +23,7 @@ export class RegisterComponent {
     private router: Router
   ) {}
 
-  onSubmit() {
+  async onSubmit() {
     this.errorMessage = '';
 
     if (this.password !== this.confirmPassword) {
@@ -36,7 +36,7 @@ export class RegisterComponent {
       return;
     }
 
-    const result = this.authService.register(this.name, this.email, this.password);
+    const result = await this.authService.register(this.name, this.email, this.password);
     if (result.success) {
       this.router.navigate(['/']);
     } else {

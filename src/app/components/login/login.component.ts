@@ -21,9 +21,9 @@ export class LoginComponent {
     private router: Router
   ) {}
 
-  onSubmit() {
+  async onSubmit() {
     this.errorMessage = '';
-    const result = this.authService.login(this.email, this.password);
+    const result = await this.authService.login(this.email, this.password);
     if (result.success) {
       this.router.navigate(['/']);
     } else {
