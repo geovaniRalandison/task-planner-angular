@@ -8,6 +8,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <button class="btn-family" routerLink="/calendar">
+        <i class="fas fa-calendar-week"></i> Calendrier
+      </button>
       <button class="btn-family" routerLink="/family">
         <i class="fas fa-users"></i> Familles
       </button>
@@ -16,6 +19,8 @@
       </button>
     </div>
   </header>
+
+  <app-week-calendar [tasks]="tasks" [families]="families"></app-week-calendar>
 
   <div class="stats-bar">
     <div class="stat-card">
