@@ -1,0 +1,130 @@
+.calendar-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .calendar-header {
+    margin-bottom: 20px;
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i {
+        color: #3498db;
+      }
+    }
+
+    .calendar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85em;
+        color: #7f8c8d;
+
+        .legend-color {
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          border-radius: 3px;
+
+          &.perso {
+            background-color: #2ecc71;
+          }
+
+          &.famille {
+            background-color: #3498db;
+          }
+
+          &.priority-haute {
+            background-color: #e74c3c;
+          }
+
+          &.priority-moyenne {
+            background-color: #f39c12;
+          }
+
+          &.priority-basse {
+            background-color: #2ecc71;
+          }
+
+          &.completed {
+            background-color: #95a5a6;
+            text-decoration: line-through;
+          }
+        }
+      }
+    }
+  }
+
+  ::ng-deep .fc {
+    .fc-event {
+      cursor: pointer;
+      border: none;
+      padding: 2px 5px;
+      font-size: 0.85em;
+
+      &.perso {
+        background-color: #2ecc71;
+        border-color: #27ae60;
+      }
+
+      &.famille {
+        background-color: #3498db;
+        border-color: #2980b9;
+      }
+
+      &.fc-priority-haute {
+        background-color: #e74c3c;
+        border-color: #c0392b;
+      }
+
+      &.fc-priority-moyenne {
+        background-color: #f39c12;
+        border-color: #d35400;
+      }
+
+      &.fc-priority-basse {
+        background-color: #2ecc71;
+        border-color: #27ae60;
+      }
+
+      &.fc-completed {
+        opacity: 0.6;
+        background-color: #95a5a6 !important;
+        border-color: #7f8c8d !important;
+        text-decoration: line-through;
+      }
+    }
+
+    .fc-event-title {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .fc-today {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .empty-calendar {
+    text-align: center;
+    padding: 40px;
+    color: #95a5a6;
+
+    i {
+      font-size: 2em;
+      margin-bottom: 10px;
+      display: block;
+    }
+  }
+}

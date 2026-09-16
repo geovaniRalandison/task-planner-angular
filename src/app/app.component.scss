@@ -11,6 +11,10 @@ header {
   text-align: center;
   margin-bottom: 30px;
   
+  .header-content {
+    margin-bottom: 15px;
+  }
+  
   h1 {
     color: #2c3e50;
     font-size: 2.2em;
@@ -25,6 +29,45 @@ header {
   .subtitle {
     color: #7f8c8d;
     font-size: 1.1em;
+  }
+  
+  .app-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    
+    a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      color: #2c3e50;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+      
+      &:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+      }
+      
+      &.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        
+        i {
+          color: white;
+        }
+      }
+      
+      i {
+        color: #667eea;
+      }
+    }
   }
 }
 

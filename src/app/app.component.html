@@ -1,7 +1,14 @@
 <div class="app-container">
   <header>
-    <h1><i class="fas fa-tasks"></i> Planificateur de tâches</h1>
-    <p class="subtitle">Gestion personnelle et familiale</p>
+    <div class="header-content">
+      <h1><i class="fas fa-tasks"></i> Planificateur de tâches</h1>
+      <p class="subtitle">Gestion personnelle et familiale</p>
+    </div>
+    <nav class="app-nav">
+      <a [routerLink]="['']" routerLinkActive="active"><i class="fas fa-list"></i> Tâches</a>
+      <a [routerLink]="['/family']" routerLinkActive="active"><i class="fas fa-users"></i> Familles</a>
+      <a [routerLink]="['/calendar']" routerLinkActive="active"><i class="fas fa-calendar-week"></i> Calendrier</a>
+    </nav>
   </header>
 
   <div class="stats-bar">

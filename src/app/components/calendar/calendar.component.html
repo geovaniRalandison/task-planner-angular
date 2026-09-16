@@ -1,0 +1,18 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <h2><i class="fas fa-calendar-week"></i> Calendrier Hebdomadaire</h2>
+    <div class="calendar-legend">
+      <span class="legend-item"><span class="legend-color perso"></span> Personnel</span>
+      <span class="legend-item"><span class="legend-color famille"></span> Famille</span>
+      <span class="legend-item"><span class="legend-color priority-haute"></span> Haute</span>
+      <span class="legend-item"><span class="legend-color priority-moyenne"></span> Moyenne</span>
+      <span class="legend-item"><span class="legend-color priority-basse"></span> Basse</span>
+      <span class="legend-item"><span class="legend-color completed"></span> Terminé</span>
+    </div>
+  </div>
+  <full-calendar [options]="calendarOptions"></full-calendar>
+  <div *ngIf="tasks.length === 0" class="empty-calendar">
+    <i class="fas fa-calendar-alt"></i>
+    <p>Aucune tâche à afficher dans le calendrier</p>
+  </div>
+</div>
