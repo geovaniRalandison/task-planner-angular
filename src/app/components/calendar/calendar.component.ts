@@ -1,13 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, EventInput } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import { AuthService, SessionUser } from '../../services/auth.service';
-import { FamilyService, Family } from '../../services/family.service';
-import { DbService } from '../../services/db.service';
 
-interface Task {
+export interface CalTask {
   id: number;
   title: string;
   description: string;
@@ -19,122 +13,131 @@ interface Task {
   createdBy?: string;
 }
 
+export interface CalFamily {
+  id: number;
+  name: string;
+}
+
+interface DayColumn {
+  date: Date;
+  dateStr: string;
+  dayNum: number;
+  dayLabel: string;
+  isToday: boolean;
+  tasks: CalTask[];
+}
+
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-week-calendar',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule],
+  imports: [CommonModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
-  currentUser: SessionUser | null = null;
-  families: Family[] = [];
-  tasks: Task[] = [];
-  calendarOptions: CalendarOptions = {
-    initialView: 'dayGridWeek',
-    plugins: [dayGridPlugin],
-    locale: 'fr',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridWeek,dayGridMonth'
-    },
-    events: [],
-    eventClassNames: (arg) => {
-      const task = this.tasks.find(t => t.id.toString() === arg.event.id);
-      if (!task) return [];
-      const classes: string[] = [task.category];
-      if (task.completed) classes.push('fc-completed');
-      classes.push('fc-priority-' + task.priority);
-      return classes;
-    },
-    eventDidMount: (arg) => {
-      const task = this.tasks.find(t => t.id.toString() === arg.event.id);
-      if (task && task.category === 'famille') {
-        const family = this.families.find(f => f.id === task.familyId);
-        const familyName = family ? family.name : 'Famille';
-        let title = task.title;
-        if (task.createdBy) {
-          title = task.title + ' (' + task.createdBy + ')';
-        }
-        const titleEl = arg.el.querySelector('.fc-event-title');
-        if (titleEl) {
-          titleEl.textContent = title;
-        }
-        let tooltip = familyName;
-        if (task.description) {
-          tooltip = familyName + ': ' + task.description;
-        }
-        arg.el.setAttribute('title', tooltip);
-      }
-    }
-  };
+export class CalendarComponent implements OnChanges {
+  @Input() tasks: CalTask[] = [];
+  @Input() families: CalFamily[] = [];
+  @Input() showHeader = true;
 
-  constructor(
-    private authService: AuthService,
-    private familyService: FamilyService,
-    private db: DbService
-  ) {}
+  weekOffset = 0;
+  weekDays: DayColumn[] = [];
+  dayNames = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+  monthNames = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 
-  async ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
-    if (!this.currentUser) {
-      return;
-    }
-    this.families = await this.familyService.getFamiliesForUser(this.currentUser.id);
-    await this.loadTasks();
-    this.updateCalendarEvents();
+  constructor() {
+    this.buildWeek();
   }
 
-  async loadTasks() {
-    if (!this.currentUser) {
-      return;
-    }
-    this.tasks = [];
-    const personal: Task[] = await this.db.getLocalStorageItem<Task[]>('tasks_' + this.currentUser.id) || [];
-    this.tasks.push(...personal.filter(t => t.category === 'perso'));
-    for (const family of this.families) {
-      const familyTasks: Task[] = await this.db.getLocalStorageItem<Task[]>('tasks_family_' + family.id) || [];
-      this.tasks.push(...familyTasks);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['tasks'] || changes['families']) {
+      this.buildWeek();
     }
   }
 
-  updateCalendarEvents() {
-    const events: EventInput[] = this.tasks
-      .filter(task => task.dueDate && task.dueDate.trim())
-      .map(task => ({
-        id: task.id.toString(),
-        title: task.title,
-        date: task.dueDate,
-        display: 'block',
-        backgroundColor: this.getEventColor(task),
-        borderColor: this.getEventColor(task)
-      }));
-    
-    this.calendarOptions = {
-      ...this.calendarOptions,
-      events: events
-    };
+  prevWeek() {
+    this.weekOffset--;
+    this.buildWeek();
   }
 
-  getEventColor(task: Task): string {
-    if (task.category === 'famille') {
-      return '#3498db';
-    }
-    switch (task.priority) {
-      case 'haute': return '#e74c3c';
-      case 'moyenne': return '#f39c12';
-      default: return '#2ecc71';
-    }
+  nextWeek() {
+    this.weekOffset++;
+    this.buildWeek();
   }
 
-  get tasksWithDueDate() {
-    return this.tasks.filter(task => task.dueDate && task.dueDate.trim());
+  goToday() {
+    this.weekOffset = 0;
+    this.buildWeek();
+  }
+
+  get weekLabel(): string {
+    if (this.weekDays.length === 0) return '';
+    const first = this.weekDays[0].date;
+    const last = this.weekDays[6].date;
+    return first.getDate() + ' ' + this.monthNames[first.getMonth()] + ' – ' +
+      last.getDate() + ' ' + this.monthNames[last.getMonth()] + ' ' + last.getFullYear();
+  }
+
+  get weekTaskCount(): number {
+    return this.weekDays.reduce((sum, d) => sum + d.tasks.length, 0);
+  }
+
+  private buildWeek() {
+    const base = new Date();
+    base.setHours(0, 0, 0, 0);
+    base.setDate(base.getDate() + this.weekOffset * 7);
+
+    const monday = new Date(base);
+    const dow = (monday.getDay() + 6) % 7;
+    monday.setDate(monday.getDate() - dow);
+
+    const todayStr = this.toKey(new Date());
+    const days: DayColumn[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(d.getDate() + i);
+      const key = this.toKey(d);
+      days.push({
+        date: d,
+        dateStr: key,
+        dayNum: d.getDate(),
+        dayLabel: this.dayNames[i],
+        isToday: key === todayStr,
+        tasks: this.tasksForDate(key)
+      });
+    }
+    this.weekDays = days;
+  }
+
+  private tasksForDate(dateKey: string): CalTask[] {
+    return this.tasks.filter(t => (t.dueDate || '') === dateKey);
+  }
+
+  private toKey(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
   }
 
   getFamilyName(familyId: number | undefined): string {
-    if (familyId === undefined) return '';
+    if (familyId === undefined || familyId === null) return '';
     const family = this.families.find(f => f.id === familyId);
-    return family ? family.name : 'Famille';
+    return family ? family.name : '';
+  }
+
+  isWeekend(day: DayColumn): boolean {
+    const dow = day.date.getDay();
+    return dow === 0 || dow === 6;
+  }
+
+  taskTitle(task: CalTask): string {
+    let tip = task.title;
+    if (task.description) tip += ' — ' + task.description;
+    if (task.category === 'famille') {
+      const fam = this.getFamilyName(task.familyId);
+      if (fam) tip += ' (' + fam + ')';
+    }
+    return tip;
   }
 }

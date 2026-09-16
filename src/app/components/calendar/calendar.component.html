@@ -1,18 +1,39 @@
-<div class="calendar-container">
-  <div class="calendar-header">
-    <h2><i class="fas fa-calendar-week"></i> Calendrier Hebdomadaire</h2>
-    <div class="calendar-legend">
-      <span class="legend-item"><span class="legend-color perso"></span> Personnel</span>
-      <span class="legend-item"><span class="legend-color famille"></span> Famille</span>
-      <span class="legend-item"><span class="legend-color priority-haute"></span> Haute</span>
-      <span class="legend-item"><span class="legend-color priority-moyenne"></span> Moyenne</span>
-      <span class="legend-item"><span class="legend-color priority-basse"></span> Basse</span>
-      <span class="legend-item"><span class="legend-color completed"></span> Terminé</span>
+<div class="week-calendar">
+  <div class="wc-header" *ngIf="showHeader">
+    <h2><i class="fas fa-calendar-week"></i> Ma semaine</h2>
+    <div class="wc-nav">
+      <button class="wc-btn" (click)="prevWeek()" title="Semaine précédente"><i class="fas fa-chevron-left"></i></button>
+      <button class="wc-btn wc-today" (click)="goToday()">Aujourd'hui</button>
+      <button class="wc-btn" (click)="nextWeek()" title="Semaine suivante"><i class="fas fa-chevron-right"></i></button>
     </div>
   </div>
-  <full-calendar [options]="calendarOptions"></full-calendar>
-  <div *ngIf="tasksWithDueDate.length === 0" class="empty-calendar">
-    <i class="fas fa-calendar-alt"></i>
-    <p>Aucune tâche avec date limite à afficher</p>
+
+  <div class="wc-title">
+    <span class="wc-week-label">{{ weekLabel }}</span>
+    <span class="wc-count" *ngIf="weekTaskCount > 0">{{ weekTaskCount }} tâche{{ weekTaskCount > 1 ? 's' : '' }}</span>
+  </div>
+
+  <div class="wc-grid">
+    <div class="wc-day" *ngFor="let day of weekDays" [class.today]="day.isToday" [class.weekend]="isWeekend(day)">
+      <div class="wc-day-head">
+        <span class="wc-day-name">{{ day.dayLabel }}</span>
+        <span class="wc-day-num">{{ day.dayNum }}</span>
+      </div>
+      <div class="wc-tasks">
+        <div class="wc-task"
+             *ngFor="let task of day.tasks"
+             [class.done]="task.completed"
+             [class.perso]="task.category === 'perso'"
+             [class.famille]="task.category === 'famille'"
+             [class.haute]="task.priority === 'haute'"
+             [class.moyenne]="task.priority === 'moyenne'"
+             [class.basse]="task.priority === 'basse'"
+             [title]="taskTitle(task)">
+          <span class="wc-dot"></span>
+          <span class="wc-task-title">{{ task.title }}</span>
+        </div>
+        <div class="wc-empty" *ngIf="day.tasks.length === 0">—</div>
+      </div>
+    </div>
   </div>
 </div>
