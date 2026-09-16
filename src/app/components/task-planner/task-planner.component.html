@@ -80,7 +80,14 @@
           <label>Catégorie</label>
           <select [(ngModel)]="newTask.category" name="category">
             <option value="perso">Personnel</option>
-            <option value="famille">Famille</option>
+            <option value="famille">Famille (partagée)</option>
+          </select>
+        </div>
+        <div class="form-group" *ngIf="newTask.category === 'famille'">
+          <label>Famille *</label>
+          <select [(ngModel)]="selectedFamilyId" name="family" [disabled]="families.length === 0">
+            <option [ngValue]="null" disabled>Choisir une famille</option>
+            <option *ngFor="let f of families" [ngValue]="f.id">{{ f.name }}</option>
           </select>
         </div>
         <div class="form-group">
@@ -92,6 +99,10 @@
           </select>
         </div>
       </div>
+      <p class="no-family-hint" *ngIf="newTask.category === 'famille' && families.length === 0">
+        Vous n'êtes membre d'aucune famille. <a routerLink="/family">Créer ou rejoindre une famille</a>
+      </p>
+      <div *ngIf="formError" class="form-error">{{ formError }}</div>
       <button type="submit" class="btn-add" [disabled]="!newTask.title">
         <i class="fas fa-plus"></i> Ajouter
       </button>
@@ -100,7 +111,7 @@
 
   <div class="tasks-container">
     <h2><i class="fas fa-list-check"></i> Mes tâches ({{ filteredTasks.length }})</h2>
-    
+
     <div *ngIf="filteredTasks.length === 0" class="empty-state">
       <i class="fas fa-clipboard-list"></i>
       <p>Aucune tâche à afficher</p>
@@ -119,6 +130,9 @@
           <p *ngIf="task.description">{{ task.description }}</p>
           <div class="task-meta">
             <span class="due-date"><i class="fas fa-calendar-alt"></i> {{ task.dueDate | date:'dd/MM/yyyy' }}</span>
+            <span class="family-tag" *ngIf="task.familyId">
+              <i class="fas fa-user-group"></i> {{ getFamilyName(task.familyId) }}<ng-container *ngIf="task.createdBy"> · par {{ task.createdBy }}</ng-container>
+            </span>
             <span class="priority-label" [class.high]="task.priority === 'haute'" [class.medium]="task.priority === 'moyenne'" [class.low]="task.priority === 'basse'">
               {{ task.priority }}
             </span>

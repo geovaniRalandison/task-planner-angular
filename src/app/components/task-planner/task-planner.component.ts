@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, SessionUser } from '../../services/auth.service';
+import { FamilyService, Family } from '../../services/family.service';
 
 interface Task {
   id: number;
@@ -12,6 +13,8 @@ interface Task {
   dueDate: string;
   completed: boolean;
   priority: 'haute' | 'moyenne' | 'basse';
+  familyId?: number;
+  createdBy?: string;
 }
 
 @Component({
@@ -23,6 +26,7 @@ interface Task {
 })
 export class TaskPlannerComponent implements OnInit {
   currentUser: SessionUser | null = null;
+  families: Family[] = [];
   tasks: Task[] = [];
   newTask: Partial<Task> = {
     title: '',
@@ -31,18 +35,49 @@ export class TaskPlannerComponent implements OnInit {
     dueDate: this.formatDate(new Date()),
     priority: 'moyenne'
   };
+  selectedFamilyId: number | null = null;
+  formError = '';
   filterCategory: 'toutes' | 'perso' | 'famille' = 'toutes';
   filterPriority: 'toutes' | 'haute' | 'moyenne' | 'basse' = 'toutes';
 
   constructor(
     private authService: AuthService,
+    private familyService: FamilyService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
-    if (!this.currentUser) return;
-    this.tasks = JSON.parse(localStorage.getItem('tasks_' + this.currentUser.id) || '[]');
+    if (!this.currentUser) {
+      return;
+    }
+    this.families = this.familyService.getFamiliesForUser(this.currentUser.id);
+    this.loadTasks();
+  }
+
+  loadTasks() {
+    if (!this.currentUser) {
+      return;
+    }
+    this.tasks = [];
+    const personal: Task[] = JSON.parse(localStorage.getItem('tasks_' + this.currentUser.id) || '[]');
+    this.tasks.push(...personal.filter(t => t.category === 'perso'));
+    for (const family of this.families) {
+      const familyTasks: Task[] = JSON.parse(localStorage.getItem('tasks_family_' + family.id) || '[]');
+      this.tasks.push(...familyTasks);
+    }
+  }
+
+  get hasFamilies(): boolean {
+    return this.families.length > 0;
+  }
+
+  getFamilyName(familyId: number | undefined): string {
+    if (familyId === undefined || familyId === null) {
+      return '';
+    }
+    const family = this.families.find(f => f.id === familyId);
+    return family ? family.name : 'Famille';
   }
 
   logout() {
@@ -56,7 +91,14 @@ export class TaskPlannerComponent implements OnInit {
   }
 
   addTask() {
-    if (!this.newTask.title) return;
+    this.formError = '';
+    if (!this.newTask.title || !this.currentUser) {
+      return;
+    }
+    if (this.newTask.category === 'famille' && !this.selectedFamilyId) {
+      this.formError = 'Sélectionnez une famille pour cette tâche (ou créez-en une).';
+      return;
+    }
     const task: Task = {
       id: Date.now(),
       title: this.newTask.title!,
@@ -64,7 +106,9 @@ export class TaskPlannerComponent implements OnInit {
       category: this.newTask.category!,
       dueDate: this.newTask.dueDate!,
       completed: false,
-      priority: this.newTask.priority!
+      priority: this.newTask.priority!,
+      familyId: this.newTask.category === 'famille' ? this.selectedFamilyId! : undefined,
+      createdBy: this.newTask.category === 'famille' ? this.currentUser.name : undefined
     };
     this.tasks.push(task);
     this.saveTasks();
@@ -95,8 +139,18 @@ export class TaskPlannerComponent implements OnInit {
   }
 
   saveTasks() {
-    if (this.currentUser) {
-      localStorage.setItem('tasks_' + this.currentUser.id, JSON.stringify(this.tasks));
+    if (!this.currentUser) {
+      return;
+    }
+    localStorage.setItem(
+      'tasks_' + this.currentUser.id,
+      JSON.stringify(this.tasks.filter(t => t.category === 'perso'))
+    );
+    for (const family of this.families) {
+      localStorage.setItem(
+        'tasks_family_' + family.id,
+        JSON.stringify(this.tasks.filter(t => t.familyId === family.id))
+      );
     }
   }
 

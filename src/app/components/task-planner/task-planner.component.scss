@@ -355,3 +355,42 @@ header {
     transform: translateY(-2px);
   }
 }
+.no-family-hint {
+  width: 100%;
+  background: #fff8e1;
+  color: #e65100;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88em;
+  margin-bottom: 15px;
+
+  a {
+    color: #1565c0;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.form-error {
+  width: 100%;
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88em;
+  margin-bottom: 15px;
+}
+
+.family-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f3e5f5;
+  color: #7b1fa2;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
