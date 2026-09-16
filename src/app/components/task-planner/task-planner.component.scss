@@ -329,3 +329,29 @@ header {
   .form-row { flex-direction: column; gap: 15px; }
   .tasks-grid { grid-template-columns: 1fr; }
 }
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-family {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 0.95em;
+
+  &:hover {
+    background: #c8e6c9;
+    transform: translateY(-2px);
+  }
+}
