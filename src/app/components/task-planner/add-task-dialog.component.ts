@@ -17,7 +17,6 @@ export interface AddTaskDialogResult {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="dialog-backdrop" (click)="cancel()"></div>
     <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
       <div class="dialog-head">
         <h2 id="dialog-title"><i class="fas fa-plus-circle"></i> Ajouter une tâche</h2>
@@ -85,12 +84,6 @@ export interface AddTaskDialogResult {
     </div>
   `,
   styles: [`
-    .dialog-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(2px);
-    }
     .dialog-panel {
       background: white;
       border-radius: 15px;

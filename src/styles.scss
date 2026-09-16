@@ -15,3 +15,9 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Backdrop natif du CDK */
+.cdk-overlay-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
+import { Overlay } from '@angular/cdk/overlay';
 import { AuthService, SessionUser } from '../../services/auth.service';
 import { FamilyService, Family } from '../../services/family.service';
 import { DbService } from '../../services/db.service';
@@ -40,7 +41,8 @@ export class TaskPlannerComponent implements OnInit {
     private familyService: FamilyService,
     private db: DbService,
     private router: Router,
-    private dialog: Dialog
+    private dialog: Dialog,
+    private overlay: Overlay
   ) {}
 
   async ngOnInit() {
@@ -86,6 +88,10 @@ export class TaskPlannerComponent implements OnInit {
     const dialogRef = this.dialog.open<AddTaskDialogResult>(AddTaskDialogComponent, {
       width: 'min(560px, calc(100vw - 40px))',
       autoFocus: 'first-tabbable',
+      positionStrategy: this.overlay.position()
+        .global()
+        .centerHorizontally()
+        .centerVertically(),
       data: this.families
     });
     dialogRef.closed.subscribe(result => {
